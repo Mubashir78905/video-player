@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — Generate videos.json</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="admin-body">
+
+  <!-- ============================================================
+       TOP BAR
+       ============================================================ -->
+  <header class="topbar">
+    <button class="topbar-menu-btn" id="menuToggle" aria-label="Toggle sidebar" title="Menu">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+
+    <a href="index.html" class="topbar-logo" title="Home">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="3" fill="#ff0000"/>
+        <path d="M10 9l6 3-6 3z" fill="#fff"/>
+      </svg>
+      <span>My<span class="logo-accent">Tube</span></span>
+    </a>
+
+    <form class="topbar-search" id="searchForm" onsubmit="return false;">
+      <input type="text" id="searchInput" placeholder="Search videos…" autocomplete="off" disabled>
+    </form>
+
+    <div class="topbar-actions">
+      <a href="index.html" class="topbar-btn" title="Back to library">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M15 6l-6 6 6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+        <span class="btn-label">Library</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       ADMIN CONTENT
+       ============================================================ -->
+  <main class="admin-main">
+
+    <!-- Intro / Help -->
+    <section class="admin-card">
+      <h1 class="admin-title">Generate <code>videos.json</code></h1>
+      <p class="admin-desc">
+        Paste your folder structure below (one folder per line, videos listed underneath),
+        or upload your existing <code>videos.json</code>. When you're done, click
+        <strong>Generate</strong>, copy the JSON, and save it as <code>videos.json</code>
+        in the root of your website next to <code>index.html</code>.
+      </p>
+    </section>
+
+    <!-- Format helper -->
+    <section class="admin-card">
+      <h2 class="admin-subtitle">1. Paste your folder structure</h2>
+      <p class="admin-hint">
+        Write one <strong>folder name</strong> followed by a colon, then list videos on the
+        following lines, indented or prefixed with <code>-</code>. Add an optional title
+        after a pipe <code>|</code>. Example:
+      </p>
+      <pre class="admin-example">
+Movies:
+  - vid1.mp4 | My First Movie
+  - vid2.mp4
+Learning:
+  - lesson01.mp4 | Introduction
+  - lesson02.mp4
+      </pre>
+
+      <textarea
+        id="folderInput"
+        class="admin-textarea"
+        spellcheck="false"
+        placeholder="Movies:&#10;  - vid1.mp4 | My First Movie&#10;  - vid2.mp4&#10;Learning:&#10;  - lesson01.mp4 | Introduction&#10;  - lesson02.mp4"
+      ></textarea>
+
+      <div class="admin-actions">
+        <button class="btn-primary" id="generateBtn">Generate JSON</button>
+        <button class="btn-secondary" id="clearBtn">Clear</button>
+        <button class="btn-secondary" id="loadExampleBtn">Load example</button>
+      </div>
+    </section>
+
+    <!-- Manual add (quick single entry) -->
+    <section class="admin-card">
+      <h2 class="admin-subtitle">Or add videos one by one (optional)</h2>
+      <div class="admin-form-row">
+        <input type="text" id="singleFolder" class="admin-input" placeholder="Folder name (e.g. Movies)">
+        <input type="text" id="singleFile" class="admin-input" placeholder="Filename (e.g. vid1.mp4)">
+        <input type="text" id="singleTitle" class="admin-input" placeholder="Title (optional)">
+        <button class="btn-primary" id="addSingleBtn">Add</button>
+      </div>
+      <ul id="manualList" class="manual-list"></ul>
+    </section>
+
+    <!-- Preview -->
+    <section class="admin-card">
+      <h2 class="admin-subtitle">2. Preview &amp; copy the JSON</h2>
+      <div class="admin-actions">
+        <button class="btn-primary" id="copyBtn">Copy to clipboard</button>
+        <button class="btn-secondary" id="downloadBtn">Download videos.json</button>
+        <button class="btn-secondary" id="uploadJsonBtn">Load existing videos.json</button>
+        <input type="file" id="jsonFileInput" accept=".json,application/json" hidden>
+      </div>
+      <pre id="jsonPreview" class="admin-json-preview">// Generated JSON will appear here…</pre>
+      <p class="admin-hint" id="statusMsg"></p>
+    </section>
+
+    <!-- Instructions -->
+    <section class="admin-card">
+      <h2 class="admin-subtitle">3. How to deploy</h2>
+      <ol class="admin-steps">
+        <li>Save the generated JSON as <code>videos.json</code> in the root folder (next to <code>index.html</code>).</li>
+        <li>Upload all website files (<code>index.html</code>, <code>watch.html</code>, <code>admin.html</code>, <code>style.css</code>, <code>app.js</code>, <code>watch.js</code>, <code>admin.js</code>, <code>videos.json</code>) to your hosting or GitHub Pages.</li>
+        <li>Upload your video files into a folder named <code>videos/</code> (with subfolders matching the folder names you used above).</li>
+        <li>Optional: place a thumbnail image (e.g. <code>vid1.jpg</code>) next to each video — it will be used automatically if present.</li>
+        <li>Open your site — folders and videos will appear automatically.</li>
+      </ol>
+    </section>
+
+  </main>
+
+  <footer class="site-footer">
+    <span>Admin helper &middot; Everything runs in your browser</span>
+  </footer>
+
+  <script src="admin.js"></script>
+</body>
+</html>

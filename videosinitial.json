@@ -1,0 +1,11 @@
+{
+  "folders": [
+    {
+      "name": "Movies",
+      "videos": [
+        { "file": "vid1.mp4", "title": "My First Movie", "thumb": "vid1.jpg" },
+        { "file": "vid2.mp4", "title": "Second Movie" }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Watch — My Video Library</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="watch-body">
+
+  <!-- ============================================================
+       TOP BAR (same as index.html)
+       ============================================================ -->
+  <header class="topbar">
+    <button class="topbar-menu-btn" id="menuToggle" aria-label="Toggle sidebar" title="Menu">
+      <svg viewBox="0 0 24 24" width="22" height="22"><path d="M3 6h18M3 12h18M3 18h18" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+    </button>
+
+    <a href="index.html" class="topbar-logo" title="Home">
+      <svg viewBox="0 0 24 24" width="28" height="28" aria-hidden="true">
+        <rect x="2" y="4" width="20" height="16" rx="3" fill="#ff0000"/>
+        <path d="M10 9l6 3-6 3z" fill="#fff"/>
+      </svg>
+      <span>My<span class="logo-accent">Tube</span></span>
+    </a>
+
+    <form class="topbar-search" id="searchForm" onsubmit="return false;">
+      <input type="text" id="searchInput" placeholder="Search videos…" autocomplete="off">
+      <button type="button" id="searchClearBtn" class="search-clear hidden" title="Clear">✕</button>
+      <button type="submit" class="search-submit" title="Search">
+        <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="2" fill="none"/><path d="M15 15l6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </form>
+
+    <div class="topbar-actions">
+      <a href="admin.html" class="topbar-btn" title="Admin / Upload helper">
+        <svg viewBox="0 0 24 24" width="20" height="20"><path d="M12 4v12m0-12l-4 4m4-4l4 4M5 20h14" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></svg>
+        <span class="btn-label">Admin</span>
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       WATCH PAGE LAYOUT
+       ============================================================ -->
+  <div class="watch-layout" id="watchLayout">
+
+    <!-- ===================== PRIMARY COLUMN ===================== -->
+    <div class="watch-primary">
+
+      <!-- PLAYER WRAPPER -->
+      <div class="player-shell" id="playerShell">
+        <div class="player-wrapper" id="playerWrapper">
+
+          <!-- The video element -->
+          <video id="videoPlayer" playsinline preload="metadata"></video>
+
+          <!-- Big center play button (shown when paused & never started) -->
+          <button class="big-play-btn" id="bigPlayBtn" aria-label="Play">
+            <svg viewBox="0 0 24 24" width="72" height="72"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+          </button>
+
+          <!-- Loading spinner -->
+          <div class="loading-indicator hidden" id="loadingIndicator">
+            <div class="spinner"></div>
+          </div>
+
+          <!-- Error overlay -->
+          <div class="error-overlay hidden" id="errorOverlay">
+            <p id="errorMessage">Unable to play this video.</p>
+            <button id="dismissError">Dismiss</button>
+          </div>
+
+          <!-- ===================== CUSTOM CONTROLS ===================== -->
+          <div class="custom-controls" id="customControls">
+
+            <!-- Progress bar -->
+            <div class="progress-container" id="progressContainer">
+              <div class="progress-bg"></div>
+              <div class="progress-buffer" id="progressBuffer"></div>
+              <div class="progress-fill" id="progressFill"></div>
+              <div class="progress-handle" id="progressHandle"></div>
+              <div class="progress-tooltip hidden" id="progressTooltip">0:00</div>
+            </div>
+
+            <!-- Buttons row -->
+            <div class="controls-row">
+
+              <!-- LEFT CONTROLS -->
+              <div class="left-controls">
+
+                <button id="playPauseBtn" class="control-btn" title="Play / Pause (k or space)">
+                  <svg id="playIcon" viewBox="0 0 24 24" width="22" height="22"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+                  <svg id="pauseIcon" viewBox="0 0 24 24" width="22" height="22" class="hidden"><path d="M6 4h4v16H6zM14 4h4v16h-4z" fill="currentColor"/></svg>
+                </button>
+
+                <!-- Prev / Next video -->
+                <button id="prevBtn" class="control-btn" title="Previous video (p)">
+                  <svg viewBox="0 0 24 24" width="22" height="22"><path d="M6 6h2v12H6zM20 6v12l-9-6z" fill="currentColor"/></svg>
+                </button>
+                <button id="nextBtn" class="control-btn" title="Next video (n)">
+                  <svg viewBox="0 0 24 24" width="22" height="22"><path d="M16 6h2v12h-2zM4 6v12l9-6z" fill="currentColor"/></svg>
+                </button>
+
+                <!-- Volume -->
+                <div class="volume-control">
+                  <button id="muteBtn" class="control-btn" title="Mute (m)">
+                    <svg id="volumeUpIcon" viewBox="0 0 24 24" width="20" height="20">
+                      <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/>
+                      <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z" fill="currentColor"/>
+                      <path d="M14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" fill="currentColor"/>
+                    </svg>
+                    <svg id="volumeOffIcon" viewBox="0 0 24 24" width="20" height="20" class="hidden">
+                      <path d="M3 10v4h4l5 5V5L7 10H3z" fill="currentColor"/>
+                      <path d="M3 3l18 18" stroke="currentColor" stroke-width="2"/>
+                    </svg>
+                  </button>
+                  <input type="range" id="volumeSlider" min="0" max="1" step="0.01" value="1" title="Volume">
+                </div>
+
+                <!-- Time display -->
+                <span id="timeDisplay" class="time-display">0:00 / 0:00</span>
+              </div>
+
+              <!-- RIGHT CONTROLS -->
+              <div class="right-controls">
+
+                <!-- Seek back/forward shortcuts -->
+                <button id="back30Btn" class="control-btn seek-btn" title="Back 30s (J)">
+                  <svg viewBox="0 0 24 24" width="22" height="22">
+                    <path d="M12 5V1L7 6l5 5V7a5 5 0 11-5 5H5a7 7 0 107-7z" fill="currentColor"/>
+                    <text x="12" y="16" text-anchor="middle" font-size="7" fill="currentColor" font-family="Arial" font-weight="bold">30</text>
+                  </svg>
+                </button>
+                <button id="back10Btn" class="control-btn seek-btn" title="Back 10s (←)">
+                  <svg viewBox="0 0 24 24" width="22" height="22">
+                    <path d="M12 5V1L7 6l5 5V7a5 5 0 11-5 5H5a7 7 0 107-7z" fill="currentColor"/>
+                    <text x="12" y="16" text-anchor="middle" font-size="7" fill="currentColor" font-family="Arial" font-weight="bold">10</text>
+                  </svg>
+                </button>
+                <button id="forward10Btn" class="control-btn seek-btn" title="Forward 10s (→)">
+                  <svg viewBox="0 0 24 24" width="22" height="22">
+                    <path d="M12 5V1l5 5-5 5V7a5 5 0 105 5h2a7 7 0 11-7-7z" fill="currentColor"/>
+                    <text x="12" y="16" text-anchor="middle" font-size="7" fill="currentColor" font-family="Arial" font-weight="bold">10</text>
+                  </svg>
+                </button>
+                <button id="forward30Btn" class="control-btn seek-btn" title="Forward 30s (L)">
+                  <svg viewBox="0 0 24 24" width="22" height="22">
+                    <path d="M12 5V1l5 5-5 5V7a5 5 0 105 5h2a7 7 0 11-7-7z" fill="currentColor"/>
+                    <text x="12" y="16" text-anchor="middle" font-size="7" fill="currentColor" font-family="Arial" font-weight="bold">30</text>
+                  </svg>
+                </button>
+
+                <!-- Playback speed -->
+                <button id="speedBtn" class="control-btn speed-btn" title="Playback speed">1x</button>
+
+                <!-- Quality -->
+                <button id="qualityBtn" class="control-btn quality-btn hidden" title="Quality">HD</button>
+
+                <!-- Settings (combined menu) -->
+                <button id="settingsBtn" class="control-btn" title="Settings">
+                  <svg viewBox="0 0 24 24" width="20" height="20">
+                    <path d="M12 8a4 4 0 100 8 4 4 0 000-8zm8.94 4a7 7 0 01-.11 1.23l2.02 1.57-1.9 3.3-2.41-.86a7 7 0 01-2.13 1.23l-.36 2.53h-3.8l-.36-2.53a7 7 0 01-2.13-1.23l-2.41.86-1.9-3.3 2.02-1.57A7 7 0 013.06 12c0-.42.04-.83.11-1.23L1.15 9.2l1.9-3.3 2.41.86c.63-.5 1.34-.92 2.13-1.23L7.95 3h3.8l.36 2.53c.79.31 1.5.73 2.13 1.23l2.41-.86 1.9 3.3-2.02 1.57c.07.4.11.81.11 1.23z" fill="currentColor"/>
+                  </svg>
+                </button>
+
+                <!-- Theater mode -->
+                <button id="theaterBtn" class="control-btn" title="Theater mode (t)">
+                  <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="6" width="20" height="12" rx="1" stroke="currentColor" stroke-width="2" fill="none"/></svg>
+                </button>
+
+                <!-- Mini player -->
+                <button id="miniBtn" class="control-btn" title="Mini player">
+                  <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="4" width="20" height="16" rx="1" stroke="currentColor" stroke-width="2" fill="none"/><rect x="12" y="12" width="8" height="6" fill="currentColor"/></svg>
+                </button>
+
+                <!-- Picture-in-Picture -->
+                <button id="pipBtn" class="control-btn" title="Picture-in-Picture (i)">
+                  <svg viewBox="0 0 24 24" width="20" height="20"><rect x="2" y="4" width="20" height="16" rx="1" stroke="currentColor" stroke-width="2" fill="none"/><rect x="12" y="13" width="8" height="5" fill="currentColor"/></svg>
+                </button>
+
+                <!-- Fullscreen -->
+                <button id="fullscreenBtn" class="control-btn" title="Fullscreen (f)">
+                  <svg id="fullscreenIcon" viewBox="0 0 24 24" width="20" height="20"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIDEO META (below player) -->
+      <div class="video-meta" id="videoMeta">
+        <h1 class="video-title" id="videoTitle">Loading…</h1>
+        <div class="video-submeta">
+          <span id="videoDuration">--:--</span>
+          <span class="dot">•</span>
+          <span id="videoFolder">—</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- ===================== SIDEBAR (UP NEXT) ===================== -->
+    <aside class="watch-sidebar" id="watchSidebar">
+      <div class="watch-sidebar-header">
+        <h2 id="upNextTitle">Up next</h2>
+      </div>
+      <div class="up-next-list" id="upNextList"></div>
+    </aside>
+
+  </div>
+
+  <!-- ============================================================
+       SETTINGS POPUP
+       ============================================================ -->
+  <div class="settings-popup hidden" id="settingsPopup">
+    <div class="settings-section">
+      <div class="settings-title">Playback speed</div>
+      <div class="settings-options" id="speedOptionsPopup"></div>
+    </div>
+    <div class="settings-section" id="qualitySection">
+      <div class="settings-title">Quality</div>
+      <div class="settings-options" id="qualityOptionsPopup"></div>
+      <div class="settings-note" id="qualityNote"></div>
+    </div>
+  </div>
+
+  <!-- ============================================================
+       MINI PLAYER (floating)
+       ============================================================ -->
+  <div class="mini-player hidden" id="miniPlayer">
+    <div class="mini-player-header" id="miniDragHandle">
+      <span class="mini-player-title" id="miniTitle">Mini player</span>
+      <div class="mini-player-actions">
+        <button id="miniPlayPause" title="Play / Pause">⏸</button>
+        <button id="miniRestore" title="Return to main player">⤢</button>
+        <button id="miniClose" title="Close">✕</button>
+      </div>
+    </div>
+    <video id="miniVideo" playsinline></video>
+  </div>
+
+  <!-- ============================================================
+       TOAST
+       ============================================================ -->
+  <div class="toast hidden" id="toast"></div>
+
+  <script src="watch.js"></script>
+</body>
+</html>

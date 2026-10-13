@@ -6,7 +6,8 @@
       "videos": [
         {
           "file": "html.mp4",
-          "title": "Introduction"
+          "title": "Introduction",
+          "thumb": "html.png"
         }   ,
         {
           "file": "kya-bat.mp4",

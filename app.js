@@ -208,13 +208,27 @@
    * Videos are expected at: /videos/<folder>/<file>
    * URL-encode each segment so spaces work.
    */
-  function videoUrl(folder, file) {
-    const enc = (s) => encodeURIComponent(s);
-    if (folder) {
-      return `${CONFIG.videosFolder}/${enc(folder)}/${enc(file)}`;
-    }
-    return `${CONFIG.videosFolder}/${enc(file)}`;
+  // function videoUrl(folder, file) {
+  //   const enc = (s) => encodeURIComponent(s);
+  //   if (folder) {
+  //     return `${CONFIG.videosFolder}/${enc(folder)}/${enc(file)}`;
+  //   }
+  //   return `${CONFIG.videosFolder}/${enc(file)}`;
+  // }
+
+   // Replaced function
+
+   function videoUrl(folder, file) {
+  // If it's already a full URL (http/https) or absolute path, use it directly.
+  if (/^https?:\/\//i.test(file) || file.startsWith("//") || file.startsWith("/")) {
+    return file;
   }
+  const enc = (s) => encodeURIComponent(s);
+  if (folder) {
+    return `${CONFIG.videosFolder}/${enc(folder)}/${enc(file)}`;
+  }
+  return `${CONFIG.videosFolder}/${enc(file)}`;
+}
 
   /**
    * Build thumbnail URL. Convention: same folder, same basename, .jpg extension.

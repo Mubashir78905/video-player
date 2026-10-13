@@ -175,12 +175,23 @@
     return null;
   }
 
-  function videoUrl(folder, file) {
-    const enc = encodeURIComponent;
-    return folder
-      ? `${CONFIG.videosFolder}/${enc(folder)}/${enc(file)}`
-      : `${CONFIG.videosFolder}/${enc(file)}`;
+  // function videoUrl(folder, file) {
+  //   const enc = encodeURIComponent;
+  //   return folder
+  //     ? `${CONFIG.videosFolder}/${enc(folder)}/${enc(file)}`
+  //     : `${CONFIG.videosFolder}/${enc(file)}`;
+  // }
+
+   function videoUrl(folder, file) {
+  // Already a full URL or absolute path? Use as-is.
+  if (/^https?:\/\//i.test(file) || file.startsWith("//") || file.startsWith("/")) {
+    return file;
   }
+  const enc = encodeURIComponent;
+  return folder
+    ? `${CONFIG.videosFolder}/${enc(folder)}/${enc(file)}`
+    : `${CONFIG.videosFolder}/${enc(file)}`;
+}
 
   function escapeHtml(s) {
     if (s == null) return "";
